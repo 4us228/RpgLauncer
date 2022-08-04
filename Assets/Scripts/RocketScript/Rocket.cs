@@ -1,37 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
-    [SerializeField] private GameObject rocket;
-    [SerializeField] private GameObject startShoot;
-    [SerializeField] private float rocketSpeed = 30f;
-    
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float damage = 5f;
+
     void Start()
     {
-        
+        Destroy(gameObject, 5f);   
     }
-
-   
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        transform.position += transform.forward * Time.deltaTime * speed;
+        
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        Hit(collision.gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Hit(other.gameObject);
+    }
+    private void Hit(GameObject collissionGameObject)
+    {
+        if (collissionGameObject.TryGetComponent(out HealtManager health))
         {
-            Vector3 rocketSpawnPoint = startShoot.transform.position;
-            
-            Quaternion rocketSpawnQuaternion = startShoot.transform.rotation;
-            
-            GameObject fire_rocket = Instantiate(rocket,rocketSpawnPoint,rocketSpawnQuaternion);
-            
-            Rigidbody Run = fire_rocket.GetComponent<Rigidbody>();
-
-            Run.AddForce(fire_rocket.transform.forward * rocketSpeed, ForceMode.Force);
-
-            Destroy(Run,3);
-
-
+            health.Hit(damage);
         }
-
+        Destroy(gameObject);
     }
 }

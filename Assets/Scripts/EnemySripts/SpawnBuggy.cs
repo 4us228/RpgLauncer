@@ -7,12 +7,10 @@ public class SpawnBuggy : MonoBehaviour
   [SerializeField]  private GameObject buggy;
     
     
+    
     void Start()
     {
-      Instantiate(buggy.transform);
-            
-        
-        
+      Instantiate(buggy,transform);
     }
     
 }
